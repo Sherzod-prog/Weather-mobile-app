@@ -72,7 +72,7 @@ const weatherOptions = {
 		description: 'Go for a walk, stop staying at home!',
 	},
 };
-
+//==
 export default function Weather({ temp, name, condition, setWeather }) {
 	const [query, setQuery] = useState('');
 

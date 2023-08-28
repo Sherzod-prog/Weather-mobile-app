@@ -20,6 +20,7 @@ export default function App() {
 		setIsLoading(false);
 	};
 	const setWeather = async query => {
+		setIsLoading(true);
 		const { data } = await axios.get(
 			`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=metric`
 		);
@@ -59,14 +60,3 @@ export default function App() {
 		/>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: '#fff',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-});
-
-// weather api b8f32b25fd23ce84f2da5e78971d7981
