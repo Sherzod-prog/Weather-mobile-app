@@ -1,5 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import Loader from './components/loader';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
