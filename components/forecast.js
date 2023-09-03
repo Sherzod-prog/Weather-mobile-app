@@ -55,7 +55,6 @@ const styles = StyleSheet.create({
 		color: 'white',
 	},
 	icon: {
-		textAlign: 'left',
 		marginHorizontal: 15,
 		width: 30,
 		height: 30,
