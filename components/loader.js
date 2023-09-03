@@ -6,13 +6,13 @@ export default function Loader() {
 	return (
 		<View style={styles.container}>
 			<Text>Loader...</Text>
-			<AnimatedLoader
+			{/* <AnimatedLoader
 				visible={true}
 				overlayColor='#FDF6AA'
 				source={require('../assets/loader.json')}
 				animationStyle={styles.lottie}
 				speed={1}
-			></AnimatedLoader>
+			></AnimatedLoader> */}
 		</View>
 	);
 }

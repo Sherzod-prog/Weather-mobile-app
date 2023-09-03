@@ -18,14 +18,6 @@ export default function App() {
 		setLocation(data);
 		setIsLoading(false);
 	};
-	const setWeather = async query => {
-		setIsLoading(true);
-		const { data } = await axios.get(
-			`https://api.openweathermap.org/data/2.5/weather?q=${query}&appid=${API_KEY}&units=metric`
-		);
-		setLocation(data);
-		setIsLoading(false);
-	};
 
 	const getLocation = async () => {
 		try {
@@ -47,14 +39,13 @@ export default function App() {
 	useEffect(() => {
 		getLocation();
 	}, []);
-
 	return isLoading ? (
 		<Loader />
 	) : (
 		<Weather
-			setWeather={setWeather}
 			temp={Math.round(location.main.temp)}
 			name={location.name}
+			location={location}
 			condition={location.weather[0].main}
 		/>
 	);

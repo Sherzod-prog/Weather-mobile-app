@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import {
-	StyleSheet,
-	View,
-	Text,
-	StatusBar,
-	TextInput,
-	Button,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, Text, ScrollView } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Forecast from './forecast';
+import axios from 'axios';
+import { FlatList } from 'react-native';
+import { formattedTime } from './helpers';
+
+const API_KEY = 'b8f32b25fd23ce84f2da5e78971d7981';
 
 const weatherOptions = {
 	Clear: {
@@ -72,16 +72,34 @@ const weatherOptions = {
 		description: 'Go for a walk, stop staying at home!',
 	},
 };
-//==
-export default function Weather({ temp, name, condition, setWeather }) {
-	const [query, setQuery] = useState('');
+
+export default function Weather({ temp, name, condition, location }) {
+	const [forecast, setForecast] = useState(null);
+
+	const getForecast = async text => {
+		const { data } = await axios.get(
+			`https://api.openweathermap.org/data/2.5/forecast?q=${text}&appid=${API_KEY}&units=metric`
+		);
+		setForecast(data.list.slice(0, 8));
+	};
+	useEffect(() => {
+		getForecast(name);
+	}, []);
+
+	const pressure = location.main.pressure; //bosim
+	const humidity = location.main.humidity; // namlik
+	const update = location.dt;
+	const sunrise = location.sys.sunrise;
+	const sunset = location.sys.sunset;
+	const wind = location.wind; // speed va deg bor
 
 	return (
 		<LinearGradient
 			style={styles.container}
 			colors={weatherOptions[condition].gradient}
 		>
-			<StatusBar barStyle='light-content' />
+			<StatusBar style='auto' />
+			<Text style={styles.update}>Last update: {formattedTime(update)}</Text>
 			<View style={styles.viewContainer}>
 				<MaterialCommunityIcons
 					name={weatherOptions[condition].iconName}
@@ -90,29 +108,67 @@ export default function Weather({ temp, name, condition, setWeather }) {
 				/>
 
 				<View style={styles.flex}>
-					<Text style={styles.temp}>{temp} ° </Text>
+					<Text style={styles.temp}>{temp}° </Text>
 					<Text style={styles.temp}> {name}</Text>
 				</View>
 			</View>
+			<View style={styles.content}>
+				<View style={styles.contentSun}>
+					<View>
+						<MaterialCommunityIcons
+							name='weather-sunset-up'
+							style={styles.icon}
+						/>
+						<Text style={styles.info}>{formattedTime(sunrise)}</Text>
+					</View>
+					<View>
+						<MaterialCommunityIcons
+							name='weather-sunset-down'
+							style={styles.icon}
+						/>
+						<Text style={styles.info}>{formattedTime(sunset)}</Text>
+					</View>
+				</View>
+				<View style={styles.contentInfo}>
+					<View>
+						<MaterialCommunityIcons
+							style={styles.icon}
+							name='weather-windy-variant'
+						/>
+						<Text style={styles.info}>{pressure} mb</Text>
+					</View>
+					<View>
+						<MaterialCommunityIcons style={styles.icon} name='air-humidifier' />
+						<Text style={styles.info}>{humidity}%</Text>
+					</View>
+					<View>
+						<MaterialCommunityIcons style={styles.icon} name='weather-windy' />
+						<Text style={styles.info}> {wind.speed} m/h</Text>
+					</View>
+				</View>
+			</View>
+			<View>
+				<View>
+					<FlatList
+						data={forecast}
+						renderItem={({ item }) => (
+							<Forecast
+								temp={item.main.temp}
+								icon={item.weather[0].icon}
+								dt={item.dt}
+								wind={item.wind.speed}
+								humidity={item.main.humidity}
+							/>
+						)}
+					/>
+				</View>
+			</View>
+
 			<View style={{ ...styles.container, ...styles.textContainer }}>
 				<Text style={styles.title}>{weatherOptions[condition].title}</Text>
 				<Text style={styles.description}>
 					{weatherOptions[condition].description}
 				</Text>
-				<View style={styles.searchContainer}>
-					<TextInput
-						placeholder='City'
-						style={styles.input}
-						value={query}
-						onChangeText={text => setQuery(text)}
-					/>
-					<Button
-						title='Search'
-						style={styles.btn}
-						color='#9ce5f7'
-						onPress={() => setWeather(query)}
-					/>
-				</View>
 			</View>
 		</LinearGradient>
 	);
@@ -127,9 +183,36 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		alignItems: 'center',
 	},
+	content: {
+		flex: 1,
+		margin: 10,
+		borderRadius: 20,
+		shadowOpacity: 0.2,
+		shadowOffset: {
+			width: 2,
+			height: 2,
+		},
+		shadowRadius: 30,
+	},
+	contentInfo: {
+		flexDirection: 'row',
+		textAlign: 'center',
+		justifyContent: 'space-between',
+		paddingHorizontal: 40,
+		paddingVertical: 5,
+		margin: 5,
+	},
 	temp: {
-		fontSize: 38,
+		fontSize: 30,
 		color: 'white',
+	},
+	update: {
+		fontSize: 14,
+		opacity: 0.5,
+		textAlign: 'right',
+		paddingTop: 40,
+		color: 'white',
+		paddingRight: 20,
 	},
 	flex: {
 		flexDirection: 'row',
@@ -137,20 +220,20 @@ const styles = StyleSheet.create({
 	},
 	textContainer: {
 		flex: 1,
-		paddingHorizontal: 40,
+		paddingHorizontal: 10,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
 		margin: 10,
 	},
 	title: {
-		fontSize: 40,
+		fontSize: 20,
 		color: 'white',
 		fontWeight: '400',
 		textAlign: 'left',
 		marginBottom: 10,
 	},
 	description: {
-		fontSize: 20,
+		fontSize: 16,
 		color: 'white',
 		textAlign: 'left',
 		fontWeight: '600',
@@ -166,6 +249,30 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-between',
 		borderRadius: 5,
 	},
-	input: { width: '65%' },
-	btn: { width: '33%' },
+	info: {
+		color: 'white',
+		fontSize: 14,
+		marginHorizontal: 10,
+	},
+	icon: {
+		textAlign: 'center',
+		color: 'white',
+		fontSize: 30,
+		marginHorizontal: 10,
+	},
+	contentSun: {
+		flexDirection: 'row',
+		textAlign: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 20,
+		paddingVertical: 10,
+	},
+	forecast: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		// flex: 1,
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		margin: 10,
+	},
 });
