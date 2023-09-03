@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, ScrollView } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Forecast from './forecast';
+import ForecastPage from './forecast';
 import axios from 'axios';
 import { FlatList } from 'react-native';
 import { formattedTime } from './helpers';
@@ -152,7 +152,7 @@ export default function Weather({ temp, name, condition, location }) {
 					<FlatList
 						data={forecast}
 						renderItem={({ item }) => (
-							<Forecast
+							<ForecastPage
 								temp={item.main.temp}
 								icon={item.weather[0].icon}
 								dt={item.dt}
