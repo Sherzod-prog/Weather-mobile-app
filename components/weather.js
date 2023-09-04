@@ -148,7 +148,7 @@ export default function Weather({ temp, name, condition, location }) {
 				</View>
 			</View>
 			<View>
-				<View>
+				<View style={styles.forecast}>
 					<FlatList
 						data={forecast}
 						renderItem={({ item }) => (
@@ -187,20 +187,15 @@ const styles = StyleSheet.create({
 		flex: 1,
 		margin: 10,
 		borderRadius: 20,
-		shadowOpacity: 0.2,
-		shadowOffset: {
-			width: 2,
-			height: 2,
-		},
-		shadowRadius: 30,
+		backgroundColor: `rgba(255,255,255,0.15)`,
 	},
 	contentInfo: {
 		flexDirection: 'row',
 		textAlign: 'center',
 		justifyContent: 'space-between',
 		paddingHorizontal: 40,
-		paddingVertical: 5,
-		margin: 5,
+		paddingVertical: 1,
+		margin: 2,
 	},
 	temp: {
 		fontSize: 30,
@@ -238,39 +233,26 @@ const styles = StyleSheet.create({
 		textAlign: 'left',
 		fontWeight: '600',
 	},
-	searchContainer: {
-		backgroundColor: '#e8e8e8',
-		width: '100%',
-		padding: 10,
-		marginTop: 10,
-		position: 'relative',
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
-		borderRadius: 5,
-	},
 	info: {
 		color: 'white',
-		fontSize: 14,
+		fontSize: 12,
 		marginHorizontal: 10,
 	},
 	icon: {
 		textAlign: 'center',
 		color: 'white',
-		fontSize: 30,
+		fontSize: 35,
 		marginHorizontal: 10,
 	},
 	contentSun: {
 		flexDirection: 'row',
 		textAlign: 'center',
 		justifyContent: 'center',
-		paddingHorizontal: 20,
-		paddingVertical: 10,
+		paddingVertical: 3,
 	},
 	forecast: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		// flex: 1,
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		margin: 10,

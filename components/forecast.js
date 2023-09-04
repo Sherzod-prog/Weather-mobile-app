@@ -3,8 +3,6 @@ import { StyleSheet, View, Text, Image } from 'react-native';
 import { formatNumber, formattedTime } from './helpers';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-// import { ScrollView } from 'react-native';
-
 export default function Forecast({ temp, dt, humidity, wind, icon }) {
 	return (
 		<View>
@@ -24,7 +22,8 @@ export default function Forecast({ temp, dt, humidity, wind, icon }) {
 					{humidity} %{' '}
 				</Text>
 				<Text style={styles.text}>
-					<MaterialCommunityIcons name='weather-windy' /> {wind} m/h{' '}
+					<MaterialCommunityIcons style={styles.icon} name='weather-windy' />{' '}
+					{wind} m/h{' '}
 				</Text>
 				{/* 24 hours */}
 
@@ -40,23 +39,23 @@ export default function Forecast({ temp, dt, humidity, wind, icon }) {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		flexDirection: 'row',
-		// justifyContent: 'space-between',
 		alignItems: 'center',
 		borderBottomWidth: 1,
 		borderColor: 'white',
 		marginHorizontal: 10,
+		backgroundColor: `rgba(255,255,255,0.1)`,
+		borderRadius: 8,
 	},
 	text: {
-		fontWeight: '300',
+		fontWeight: '400',
 		textAlign: 'left',
-		marginHorizontal: 15,
+		marginHorizontal: 10,
 		color: 'white',
+		paddingVertical: 1,
 	},
 	icon: {
-		marginHorizontal: 15,
-		width: 30,
-		height: 30,
+		width: 25,
+		height: 25,
 	},
 });
